@@ -3,6 +3,22 @@ from discord.ext import commands
 from discord.ui import Button, View
 import random
 import os
+from flask import Flask
+from threading import Thread
+
+# ตั้งค่า Flask สำหรับ Web Service
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run():
+    app.run(host="0.0.0.0", port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
 
 # ตั้งค่าบอท
 intents = discord.Intents.all()
@@ -94,6 +110,9 @@ async def house(ctx):
 @bot.event
 async def on_ready():
     print(f"บอท {bot.user} พร้อมใช้งาน!")
+
+# เรียกใช้ Flask Web Server
+keep_alive()
 
 # รันบอท
 bot.run(os.getenv("DISCORD_TOKEN"))
